@@ -4,20 +4,24 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {HashRouter, Switch, Route} from 'react-router-dom'
+import {Provider} from 'react-redux'
+
 import Login from './container/login/login'
 import Register from './container/register/register'
 import Main from './container/main/main'
-
+import store from './redux/store'
 
 // 渲染组件标签到页面
 ReactDOM.render((
-  <HashRouter>
-    <Switch>
-      <Route path='/login' component={Login}/>
-      <Route path='/register' component={Register}/>
-      <Route component={Main}/>
-    </Switch>
-  </HashRouter>
+  <Provider store={store}>
+    <HashRouter>
+      <Switch>
+        <Route path='/login' component={Login}/>
+        <Route path='/register' component={Register}/>
+        <Route component={Main}/>{/*默认组件*/}
+      </Switch>
+    </HashRouter>
+  </Provider>
 ), document.getElementById('root'))
 
 

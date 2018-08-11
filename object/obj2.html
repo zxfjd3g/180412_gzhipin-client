@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>$Title$</title>
+</head>
+<body>
+<script>
+  function strongObj(obj) {
+    let clone=Object.create(obj);
+    clone.getName=function () {
+      console.log(this.name);
+    };
+    return clone;
+  }
+  let obj={
+    name:"tom"
+  };
+  let obj2=strongObj(obj);
+  obj2.getName();
+</script>
+</body>
+</html>
