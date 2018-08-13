@@ -1,12 +1,15 @@
 import React, {Component} from 'react'
 import {NavBar, List, WingBlank, WhiteSpace, InputItem, Radio, Button} from 'antd-mobile'
+import {connect} from 'react-redux'
+import {Redirect} from 'react-router-dom'
 
 import Logo from '../../components/logo/logo'
+import {login} from '../../redux/actions'
 /*
 登陆路由组件
  */
 
-export default class Register extends Component {
+class Login extends Component {
 
   // 初始化状态
   state = {
@@ -23,6 +26,7 @@ export default class Register extends Component {
   // 请求登陆
   login = () => {
     console.log(this.state)
+    this.props.login(this.state)
   }
 
   handleChange = (name, val) => {
@@ -32,12 +36,22 @@ export default class Register extends Component {
   }
 
   render () {
+
+    const {type} = this.state
+    const {msg, redirectTo} = this.props.user
+    // 判断是否需要自动跳转
+    if(redirectTo) {
+      return <Redirect to={redirectTo}/>  // 在render()中实现自动跳转指定路由
+    }
+
     return (
       <div>
         <NavBar>用户登陆</NavBar>
         <Logo/>
         <WingBlank>
           <List>
+            <p>{msg}</p>
+
             <InputItem type='text' placeholder='请输入用户名'
                        onChange={(val) => this.handleChange('username', val)}>用户名: </InputItem>
             <WhiteSpace/>
@@ -53,3 +67,9 @@ export default class Register extends Component {
     )
   }
 }
+
+export default connect(
+  state => ({user: state.user}),  // 向UI组件Login中传入哪些一般属性
+  {login} // 向UI组件Login中传入哪些函数属性
+  // 传给UI组件不是异步action函数本身, 而是包含分发异步action的一个新的函数
+)(Login)

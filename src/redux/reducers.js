@@ -3,32 +3,35 @@
  */
 import {combineReducers} from 'redux'
 
-// 管理xxx状态的reducer
-const initXxx = []
-function xxx(state = initXxx, action) {
-  console.log('xxx()', action)
-  switch (action.type) {
+import {
+  AUTH_SUCCESS,
+  ERROR_MSG
+} from './action-types'
 
+const initUser = {
+  username: '',
+  type: '',
+  msg: '', // 错误提示信息
+  redirectTo: '', // 需要自动跳转的路径
+}
+function user (state=initUser, action) {
+  switch (action.type) {
+    case AUTH_SUCCESS:
+      const user = action.data
+      return {...user, redirectTo:'/'}
+    case ERROR_MSG:
+      const msg = action.data
+      return {...state, msg}
     default:
       return state
   }
 }
 
-const initYyy = {}
-function yyy(state = initYyy, action) {
-  console.log('yyy()', action)
-  switch (action.type) {
-
-    default:
-      return state
-  }
-}
 
 export default combineReducers({
-  xxx,
-  yyy
+  user
 })
 /*
 1. 向外暴露是一个整合后的reducer函数: function (state, action)
-2. state的结构为: {xxx: xxx(), yyy: yyy()}
+2. state的结构为: {user: user()}
  */
