@@ -3,6 +3,7 @@ import {NavBar, List, WingBlank, WhiteSpace, InputItem, Radio, Button} from 'ant
 
 import Logo from '../../components/logo/logo'
 
+import {reqRegister} from '../../api'
 
 /*
 注册路由组件
@@ -26,6 +27,10 @@ export default class Register extends Component {
   // 请求注册
   register = () => {
     console.log(this.state)
+
+    reqRegister(this.state).then(response => {
+      console.log(response.data) // {code:0, data: user}  {code:1, msg: 'xxx'}
+    })
   }
 
   handleChange = (name, val) => {
