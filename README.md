@@ -10,7 +10,7 @@
     2). 引入antd-mobile, 并实现按需打包和自定义主题
     3). 引入react-router-dom(v4): 
         HashRouter/Route/Switch
-        history: push()/replace()
+        history: push()/replace()/back()
     4). 引入redux
         redux/react-redux/redux-thunk
         redux: createStore()/combineReducers()/applyMiddleware()
@@ -23,4 +23,12 @@
         antd组件: NavBar/WingBlank/WhiteSpace/List/InputItem/Radio/Button
         路由跳转: this.props.history.replace('/login')
         收集表单输入数据: state/onChange/变量属性名
-        
+
+# day02
+## 1. 搭建后台应用并测试
+
+## 2. 测试使用mongoose操作mongodb
+
+## 3. 完成注册/登陆的后台   
+
+## 4. 完成注册/登陆前台
