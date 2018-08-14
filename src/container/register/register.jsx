@@ -1,13 +1,16 @@
 import React, {Component} from 'react'
 import {NavBar, List, WingBlank, WhiteSpace, InputItem, Radio, Button} from 'antd-mobile'
+import {connect} from 'react-redux'
+import {Redirect} from 'react-router-dom'
 
 import Logo from '../../components/logo/logo'
-
+import {register} from '../../redux/actions'
 
 /*
 注册路由组件
+本身是一个UI, 但会包装生成一个对应的容器组件
  */
-export default class Register extends Component {
+class Register extends Component {
 
   // 初始化状态
   state = {
@@ -26,6 +29,7 @@ export default class Register extends Component {
   // 请求注册
   register = () => {
     console.log(this.state)
+    this.props.register(this.state)
   }
 
   handleChange = (name, val) => {
@@ -36,12 +40,19 @@ export default class Register extends Component {
 
   render () {
     const {type} = this.state
+    const {msg, redirectTo} = this.props.user
+    // 判断是否需要自动跳转
+    if(redirectTo) {
+      return <Redirect to={redirectTo}/>  // 在render()中实现自动跳转指定路由
+    }
+
     return (
       <div>
         <NavBar>用户注册</NavBar>
         <Logo/>
         <WingBlank>
           <List>
+            <p className='error-msg'>{msg}</p>
             <InputItem type='text' placeholder='请输入用户名'
                        onChange={(val) => this.handleChange('username', val)}>用户名: </InputItem>
             <WhiteSpace/>
@@ -66,3 +77,16 @@ export default class Register extends Component {
     )
   }
 }
+
+export default connect(
+  state => ({user: state.user}),  // 向UI组件Register中传入哪些一般属性
+  {register} // 向UI组件Register中传入哪些函数属性
+            // 传给UI组件不是异步action函数本身, 而是包含分发异步action的一个新的函数
+)(Register)
+
+/*
+函数属性:
+  function (user) {
+    distpatch(register(user))
+  }
+ */

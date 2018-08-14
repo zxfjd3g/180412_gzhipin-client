@@ -6,25 +6,48 @@
 </head>
 <body>
 <script>
-  function inheritPrototype(SubType,SuperType) {
-    let prototype=Object.create(SuperType.prototype);
-    prototype.constructor=SubType;
-    SubType.prototype=prototype;
-  }
-  function Parent(name,age) {
-    this.name=name;
-    this.age=age;
-    Parent.prototype.getName=function () {
-      console.log(this.name)
+  function inherit(subclass, superclass) {
+    // 建立空的构造器.避免了superclass的实例化.
+    var F = function () {
+    };
+    // 使F的显式原型指向super类型原型对象
+    F.prototype = superclass.prototype;
+    // 使sub类型的显式原型指向F的实例(sub类型的原型对象的原型就是super的原型对象)
+    subclass.prototype = new F();
+
+    // 让子类型的原型对象的构造器指向子类型
+    subclass.prototype.constructor = subclass;
+
+    // 给子类型添加引用指向父类型的原型对象(在子类型构造函数中需要)
+    subclass.superclass = superclass.prototype;
+    // 修正super的原型对象的constructor指向
+    if (superclass.prototype.constructor == Object.prototype.constructor) {
+      superclass.prototype.constructor = superclass;
     }
   }
-  function Child(name,age) {
-    Parent.apply(this,[name,age]);
+
+  /* superclass */
+  function Person( name ) {
+    this.name = name;
+  };
+  Person.prototype.getName = function() {
+    return this.name;
+  };
+
+  /* subclass */
+  function Author( name, books ) {
+    // 这样就可以和Person耦合松散.
+    Author.superclass.constructor.call(this, name);
+    this.books = books;
+  };
+  inherit(Author, Person);
+
+  Author.prototype.getBooks = function() {
+    return this.books;
   }
-  inheritPrototype(Child,Parent);
-  let child=new Child("jack",60);
-  console.log(child);
-  child.getName()
+
+  var a = new Author('kc', 'dd');
+  alert(a.getName())
 </script>
 </body>
 </html>
