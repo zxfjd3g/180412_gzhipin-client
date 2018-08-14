@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
+import {Redirect} from 'react-router-dom'
 import {NavBar, List, WingBlank, InputItem, TextareaItem, Button} from 'antd-mobile'
 
 import HeaderSelector from '../../components/header-selector/header-selector'
@@ -31,6 +32,13 @@ class LaobanInfo extends Component {
   }
 
   render () {
+
+    // 如果用户的信息已经完善, 跳转到/laoban
+    const {header} = this.props.user
+    if(header) {
+      return <Redirect to='/laoban'/>
+    }
+
     return (
       <div>
         <NavBar>老板信息完善</NavBar>
@@ -53,6 +61,12 @@ class LaobanInfo extends Component {
 }
 
 export default connect(
-  state => ({}),
-  {updateUser}
+  state => ({user: state.user}),
+  {updateUser: updateUser}  // 传给UI组件不是异步action函数本身, 而是包含分发异步action的一个新的函数
 )(LaobanInfo)
+
+/*
+function (...args) {
+  dispatch(updateUser(...args))
+}
+ */

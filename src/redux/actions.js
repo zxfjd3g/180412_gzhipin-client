@@ -6,7 +6,8 @@
 import {
   reqRegister,
   reqLogin,
-  reqUpdateUser
+  reqUpdateUser,
+  reqUser
 } from '../api'
 
 import {
@@ -101,6 +102,25 @@ export function updateUser (user) {
     }
   }
 }
+
+/*
+异步获取户信息
+ */
+export function getUser () {
+  return async dispatch => {
+    // 1. 发送异步ajax请求
+    const response = await reqUser()
+    const result = response.data
+    // 2. 根据结果分发同步action
+    if(result.code===0) {
+      dispatch(receiveUser(result.data))
+    } else {
+      dispatch(resetUser(result.msg))
+    }
+  }
+}
+
+
 
 /*
 async/await?
