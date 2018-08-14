@@ -22,22 +22,33 @@ const errorMsg = (msg) => ({type: ERROR_MSG, data: msg})
 /*
 注册的异步action
  */
-export function register({username, password, type}) {
-  return dispatch => {
+export function register({username, password,password2, type}) {
+  // 进行前台表单验证
+  if(!username) {
+    return errorMsg('用户名必须指定')
+  } else if(!password) {
+    return errorMsg('密码必须指定')
+  } else if(password2!==password) {
+    return errorMsg('2次密码必须一致')
+  } else if(!type) {
+    return errorMsg('类型必须指定')
+  }
+
+  return async dispatch => {
+
     // 执行异步(发送ajax请求)
-    reqRegister({username, password, type}).then(response => {
-      // 异步得到结果,
-      const result = response.data // {code: 0, data: user} | {code: 1, msg: 'xxx'}
-      if(result.code===0) { // 成功
-        // 分发同步action(成功)
-        const user = result.data
-        dispatch(authSuccess(user))
-      } else { // 失败
-        // 分发同步action(成功)
-        const msg = result.msg
-        dispatch(errorMsg(msg))
-      }
-    })
+    const response = await reqRegister({username, password, type})
+    // 异步得到结果,
+    const result = response.data // {code: 0, data: user} | {code: 1, msg: 'xxx'}
+    if(result.code===0) { // 成功
+      // 分发同步action(成功)
+      const user = result.data
+      dispatch(authSuccess(user))
+    } else { // 失败
+      // 分发同步action(成功)
+      const msg = result.msg
+      dispatch(errorMsg(msg))
+    }
   }
 }
 
@@ -45,20 +56,35 @@ export function register({username, password, type}) {
 登陆的异步action
  */
 export function login({username, password}) {
-  return dispatch => {
-    // 执行异步(发送ajax请求)
-    reqLogin(username, password).then(response => {
-      // 异步得到结果,
-      const result = response.data // {code: 0, data: user} | {code: 1, msg: 'xxx'}
-      if(result.code===0) { // 成功
-        // 分发同步action(成功)
-        const user = result.data
-        dispatch(authSuccess(user))
-      } else { // 失败
-        // 分发同步action(成功)
-        const msg = result.msg
-        dispatch(errorMsg(msg))
-      }
-    })
+  return async dispatch => {
+    // 进行前台表单验证
+    if(!username) {
+      return dispatch(errorMsg('用户名必须指定'))
+    } else if(!password) {
+      return dispatch(errorMsg('密码必须指定'))
+    }
+
+    const response = await reqLogin(username, password)
+    const result = response.data // {code: 0, data: user} | {code: 1, msg: 'xxx'}
+    if(result.code===0) { // 成功
+      // 分发同步action(成功)
+      const user = result.data
+      dispatch(authSuccess(user))
+    } else { // 失败
+      // 分发同步action(成功)
+      const msg = result.msg
+      dispatch(errorMsg(msg))
+    }
   }
 }
+
+/*
+async/await?
+1. 作用?
+    简化pormise的使用(不用再使用then()来指定成功或失败的回调函数)
+    以同步编码的方式实现异步流程(没有回调函数)
+2. 哪里使用await?(在某条语句的左侧加)
+    返回promise对象的语句, 为了直接得到异步返回的结果, 而不是promsie对象
+3. 哪里使用async? (在某个函数定义左侧)
+    使用了await的函数
+ */

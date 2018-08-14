@@ -2,7 +2,7 @@
 包含n个reducer函数的模块
  */
 import {combineReducers} from 'redux'
-
+import {getRedirectPath} from '../utils'
 import {
   AUTH_SUCCESS,
   ERROR_MSG
@@ -18,7 +18,7 @@ function user (state=initUser, action) {
   switch (action.type) {
     case AUTH_SUCCESS:
       const user = action.data
-      return {...user, redirectTo:'/'}
+      return {...user, redirectTo:getRedirectPath(user.type, user.header)}
     case ERROR_MSG:
       const msg = action.data
       return {...state, msg}
@@ -26,6 +26,8 @@ function user (state=initUser, action) {
       return state
   }
 }
+
+
 
 
 export default combineReducers({

@@ -11,6 +11,8 @@ import Register from './container/register/register'
 import Main from './container/main/main'
 import store from './redux/store'
 
+import './assets/css/index.less'
+
 // 渲染组件标签到页面
 ReactDOM.render((
   <Provider store={store}>

@@ -45,6 +45,9 @@
         注册: 流程
         登陆: 流程
         响应数据结构: {code: 0, data: user}, {code: 1, msg: 'xxx'}  
+    3). postman的优点(相对于浏览器)
+        可以方便的发送post请求
+        可以将发送过的请求保存下来
 
 ## 4. 完成注册/登陆前台
     1). ajax
@@ -61,9 +64,9 @@
         actions.js
           包含n个action creator函数
           同步action: 返回一个action对象({type: 'XXX', data: xxx})
-          异步action: 返回一个函数: disptach => {执行异步代理, 结束时dispatch一个同步action}
+          异步action: 返回一个函数: disptach => {执行异步代码, 结束时dispatch一个同步action}
         action-types.js
-          action的type名称常量
+          包含n个同步action的type名称常量
     3). component
         UI组件: 
             组件内部没有使用任何redux相关的API
@@ -86,3 +89,10 @@
         b. 转发请求
     4). 配置代理
         告诉代理一些信息: 转发的目标地址
+        
+        
+ # day03
+ ## 1. 用户信息完善
+ 
+ ## 2. 主界面
+ 
