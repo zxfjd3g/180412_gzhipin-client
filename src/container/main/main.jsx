@@ -9,6 +9,7 @@ import Laoban from '../laoban/laoban'
 import Dashen from '../dashen/dashen'
 import Message from '../message/message'
 import Personal from '../personal/personal'
+import Chat from '../chat/chat'
 import NavFooter from '../../components/nav-footer/nav-footer'
 import NotFound from '../../components/not-found/not-found'
 import Cookies from 'js-cookie'
@@ -124,6 +125,8 @@ class Main extends Component {
           <Route path='/dashen' component={Dashen}/>
           <Route path='/message' component={Message}/>
           <Route path='/personal' component={Personal}/>
+          <Route path='/chat/:userid' component={Chat}/>
+
           <Route component={NotFound}/>
         </Switch>
         {currentNav ? <NavFooter navList={this.navList}/> : null}
