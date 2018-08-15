@@ -93,6 +93,14 @@ class Main extends Component {
       return <Redirect to={getRedirectPath(user.type, user.header)}/>
     }
 
+    // 保存一隐藏nav的标识数据: hide: true
+    if(user.type==='laoban') {
+      this.navList[1].hide = true
+    } else {
+      this.navList[0].hide = true
+    }
+
+
 
     // 得到当前导航的信息对象
     // find()返回的是第一次回调函数返回true的对应的元素, 如果没有一匹配的, 返回undefined
@@ -112,7 +120,7 @@ class Main extends Component {
           <Route path='/personal' component={Personal}/>
           <Route component={NotFound}/>
         </Switch>
-        {currentNav ? <NavFooter/> : null}
+        {currentNav ? <NavFooter navList={this.navList}/> : null}
       </div>
     )
   }

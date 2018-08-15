@@ -51,6 +51,7 @@ export function register({username, password,password2, type}) {
     if(result.code===0) { // 成功
       // 分发同步action(成功)
       const user = result.data
+      debugger
       dispatch(authSuccess(user))
     } else { // 失败
       // 分发同步action(成功)
