@@ -24,7 +24,7 @@ const errorMsg = (msg) => ({type: ERROR_MSG, data: msg})
 // 接收用户信息的同步action
 const receiveUser = (user) => ({type: RECEIVE_USER, data: user})
 // 重置用户信息
-const resetUser = (msg) => ({type: RESET_USER, data: msg})
+export const resetUser = (msg) => ({type: RESET_USER, data: msg})
 
 
 /*

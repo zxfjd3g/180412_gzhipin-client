@@ -95,8 +95,14 @@ class Main extends Component {
 
     // 保存一隐藏nav的标识数据: hide: true
     if(user.type==='laoban') {
+      if(path==='/dashen') { // 如果是老板, 请求/dashen, 自动跳转到/laoban
+        return <Redirect to='/laoban'/>
+      }
       this.navList[1].hide = true
     } else {
+      if(path==='/laoban') { // 如果是大神, 请求/laoban, 自动跳转到/dashen
+        return <Redirect to='/dashen'/>
+      }
       this.navList[0].hide = true
     }
 
