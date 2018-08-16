@@ -91,13 +91,13 @@
         告诉代理一些信息: 转发的目标地址
         
         
- # day03
+# day03
  
- ## 1. 完善注册/登陆功能
+## 1. 完善注册/登陆功能
      1). 动态计算成功后跳转的path: 设计工具函数
      2). 前台表单验证: 在action中 
  
- ## 2. 用户信息完善
+## 2. 用户信息完善
     1). 用户信息完善界面路由组件: 
         组件: dashen-info/laoban-info/header-selector
         界面: Navbar/List/Grid/InputItem/Button/TextareaItem
@@ -114,7 +114,7 @@
         读取状态数据
         更新状态
  
- ## 3. 主界面
+## 3. 主界面
     1). 拆分界面, 抽取组件(一般/路由)
     2). 封装导航路由相关数据(数组/对象)
     3). 设计整体main组件的逻辑
@@ -124,11 +124,43 @@
         d. 根路径的自动跳转: 查看路由的相关API
         e. 404页面的设计: NotFound组件的path不需要指定
  
- # day04
- ## 1. NavFooter组件
+# day04
+## 1. NavFooter组件
+    1). 过滤navList
+    2). 包装一般组件使其可以访问路由相关属性: withRouter()
+    3). 通过js实现路由跳转: history.replace()
+    
+## 2. Personal组件
+    1). 读取user信息显示
+    2). 退出登陆
  
- ## 2. Personal组件
+## 3. Laoban/Dashen组件
+    1). 为大神/老板列表组件抽取用户列表组件: user-list
+    2). 异步读取指定类型用户列表数据
+        后台路由
+        api
+        redux
+        component
  
- ## 3. Laoban/Dashen组件
- 
- ## 4. 实时聊天
+## 4. 实时聊天
+    1). socket.io
+         实现实时聊天的库
+         包装的H5 WebSocket和轮询---> 兼容性/编码简洁性
+         包含2个包:
+           socket.io: 用于服务器端
+           socket.io-client: 用于客户端
+         基本思想: 远程自定义事件机制
+             绑定事件监听(订阅消息): 事件名(消息名), 回调函数
+             触发事件(发布消息): 事件名, 数据
+             on(name, function(data){}): 绑定监听
+             emit(name, data): 发送消息
+            
+             io: 服务器端核心的管理对象: 内部管理着n个连接对象(socket)
+             socket: 客户端与服务器的连接对象
+     2). 收发消息
+         前台应用
+             chat组件: 收集数据分发发消息的异步action
+             actions: 连接socketio服务器/ 发送消息
+         后台应用
+             models: 定义操作chats集合的model
+             socketIO: 监视连接 / 监听浏览器发送的聊天消息 / 保存聊天信息 / 向所有连接的浏览器端发消息
