@@ -7,7 +7,8 @@ import {
   AUTH_SUCCESS,
   ERROR_MSG,
   RESET_USER,
-  RECEIVE_USER
+  RECEIVE_USER,
+  RECEIVE_USER_LIST
 } from './action-types'
 
 const initUser = {
@@ -19,6 +20,7 @@ const initUser = {
 function user (state=initUser, action) {
   switch (action.type) {
     case AUTH_SUCCESS:
+      debugger
       const user = action.data
       return {...user, redirectTo:getRedirectPath(user.type, user.header)}
     case ERROR_MSG:
@@ -33,15 +35,24 @@ function user (state=initUser, action) {
   }
 }
 
-
+const initUserList = []
+function userList(state=initUserList, action) {
+  switch (action.type) {
+    case RECEIVE_USER_LIST:
+      return action.data
+    default:
+      return state
+  }
+}
 
 
 export default combineReducers({
-  user
+  user,
+  userList
 })
 /*
 1. 向外暴露是一个整合后的reducer函数: function (state, action)
-2. state的结构为: {user: user()}
+2. state的结构为: {user: user(), userList: userList()}
  */
 
 

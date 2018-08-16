@@ -21,3 +21,6 @@ export const reqUpdateUser = (user) => ajax(BASE+'/update', user, 'POST')
 
 // ## 3. 获取当前用户信息
 export const reqUser = () => ajax(BASE+'/user')
+
+// ## 4. 获取指定类型的用户列表
+export const reqUserList = (type) => ajax(BASE+'/userlist', {type})

@@ -9,6 +9,7 @@ import Laoban from '../laoban/laoban'
 import Dashen from '../dashen/dashen'
 import Message from '../message/message'
 import Personal from '../personal/personal'
+import Chat from '../chat/chat'
 import NavFooter from '../../components/nav-footer/nav-footer'
 import NotFound from '../../components/not-found/not-found'
 import Cookies from 'js-cookie'
@@ -93,6 +94,20 @@ class Main extends Component {
       return <Redirect to={getRedirectPath(user.type, user.header)}/>
     }
 
+    // 保存一隐藏nav的标识数据: hide: true
+    if(user.type==='laoban') {
+      if(path==='/dashen') { // 如果是老板, 请求/dashen, 自动跳转到/laoban
+        return <Redirect to='/laoban'/>
+      }
+      this.navList[1].hide = true
+    } else {
+      if(path==='/laoban') { // 如果是大神, 请求/laoban, 自动跳转到/dashen
+        return <Redirect to='/dashen'/>
+      }
+      this.navList[0].hide = true
+    }
+
+
 
     // 得到当前导航的信息对象
     // find()返回的是第一次回调函数返回true的对应的元素, 如果没有一匹配的, 返回undefined
@@ -100,7 +115,7 @@ class Main extends Component {
 
     return (
       <div>
-        {currentNav ? <NavBar>{currentNav.title}</NavBar> : null}
+        {currentNav ? <NavBar className='fix-top'>{currentNav.title}</NavBar> : null}
 
         <Switch>
           <Route path='/laobaninfo' component={LaobanInfo}/>
@@ -110,9 +125,11 @@ class Main extends Component {
           <Route path='/dashen' component={Dashen}/>
           <Route path='/message' component={Message}/>
           <Route path='/personal' component={Personal}/>
+          <Route path='/chat/:userid' component={Chat}/>
+
           <Route component={NotFound}/>
         </Switch>
-        {currentNav ? <NavFooter/> : null}
+        {currentNav ? <NavFooter navList={this.navList}/> : null}
       </div>
     )
   }
