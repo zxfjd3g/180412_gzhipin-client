@@ -3,7 +3,7 @@
  */
 
 import React, {Component} from 'react'
-import {NavBar, List, InputItem} from 'antd-mobile'
+import {NavBar, List, InputItem, Icon, Grid} from 'antd-mobile'
 import {connect} from 'react-redux'
 import {sendMsg} from '../../redux/actions'
 
@@ -12,7 +12,20 @@ const Item = List.Item
 class Chat extends Component {
 
   state = {
-    content: ''
+    content: '',
+    isShow: false, // 是否显示表情列表
+  }
+
+
+  // 在第一次render()之前调用
+  componentWillMount () {
+    const emojisStr = '❤❤❤❤❤😊😊😊😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊'
+    this.emojis = []
+    emojisStr.split('').forEach(emoji => {
+      this.emojis.push({
+        text: emoji
+      })
+    })
   }
 
   send = () => {
@@ -29,7 +42,30 @@ class Chat extends Component {
     const to = this.props.match.params.userid
     this.props.sendMsg({content, from, to})
     // 清空输入
-    this.setState({content: ''})
+    this.setState({content: '', isShow: false})
+  }
+
+  // 初始化显示滚动到底部
+  componentDidMount() {
+    // 初始显示列表
+    window.scrollTo(0, document.body.scrollHeight)
+  }
+
+  // 更新显示时滚动到底部
+  componentDidUpdate () {
+    // 更新显示列表
+    window.scrollTo(0, document.body.scrollHeight)
+  }
+
+  toggleEmojis = () => {
+    const isShow = !this.state.isShow
+    this.setState({isShow})
+    if(isShow) {
+      // 异步手动派发resize事件,解决表情列表显示的bug
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'))
+      }, 0)
+    }
   }
 
   render() {
@@ -51,8 +87,14 @@ class Chat extends Component {
 
     return (
       <div id='chat-page'>
-        <NavBar>{users[targetId].username}</NavBar>
-        <List>
+        <NavBar
+          icon={<Icon type='left'/>}
+          onLeftClick={() => this.props.history.goBack()}
+        >
+          {users[targetId].username}
+        </NavBar>
+
+        <List style={{marginBottom: 50}}>
           {
             msgs.map((msg, index) => {
               if(msg.to===meId) { // 别人发给我的
@@ -83,11 +125,31 @@ class Chat extends Component {
           <InputItem
             placeholder="请输入"
             onChange={val => {this.setState({content: val})}}
+            onFocus={() => this.setState({isShow: false})}
             value={this.state.content}
             extra={
-              <span onClick={this.send}>发送</span>
+              <span>
+                <span onClick={this.toggleEmojis}>😊</span>
+                <span onClick={this.send}>发送</span>
+              </span>
             }
           />
+          {
+            this.state.isShow
+              ? (
+                  <Grid
+                    data={this.emojis}
+                    columnNum={8}
+                    carouselMaxRow={4}
+                    isCarousel={true}
+                    onClick={(item) => {
+                      this.setState({content: this.state.content + item.text})
+                    }}
+                  />
+                )
+              : null
+          }
+
         </div>
       </div>
     )
