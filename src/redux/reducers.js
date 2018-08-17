@@ -8,7 +8,9 @@ import {
   ERROR_MSG,
   RESET_USER,
   RECEIVE_USER,
-  RECEIVE_USER_LIST
+  RECEIVE_USER_LIST,
+  RECEIVE_CHAT_MSGS,
+  RECEIVE_CHAT_MSG
 } from './action-types'
 
 const initUser = {
@@ -45,14 +47,35 @@ function userList(state=initUserList, action) {
   }
 }
 
+const initChat = {
+  users: {}, // 所有用户信息对象的对象容器: key是user的_id, value是{username, header}
+  chatMsgs: [], // 当前用户相关的所有chatMsg的数组
+  unReadCount: 0, // 总的未读数量
+}
+function chat(state=initChat, action) {
+
+  switch (action.type) {
+    case RECEIVE_CHAT_MSGS:
+      const {users, chatMsgs} = action.data
+      return {
+        users,
+        chatMsgs,
+        unReadCount: 0,
+      }
+    default:
+      return state
+  }
+}
+
 
 export default combineReducers({
   user,
-  userList
+  userList,
+  chat
 })
 /*
 1. 向外暴露是一个整合后的reducer函数: function (state, action)
-2. state的结构为: {user: user(), userList: userList()}
+2. state的结构为: {user: user(), userList: userList(), chat: chat()}
  */
 
 

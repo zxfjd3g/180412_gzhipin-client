@@ -19,8 +19,14 @@ export const reqLogin = (username, password) => ajax(BASE+'/login', {username, p
 // ## 3. 更新用户信息
 export const reqUpdateUser = (user) => ajax(BASE+'/update', user, 'POST')
 
-// ## 3. 获取当前用户信息
+// ## 4. 获取当前用户信息
 export const reqUser = () => ajax(BASE+'/user')
 
-// ## 4. 获取指定类型的用户列表
+// ## 5. 获取指定类型的用户列表
 export const reqUserList = (type) => ajax(BASE+'/userlist', {type})
+
+// ## 6. 获取当前用户相关的所有消息
+export const reqMsgList = () => ajax(BASE+'/msglist')
+
+// ## 7. 更新查看了的消息状态
+export const reqReadMsg = (from) => ajax(BASE+'/readmsg', {from}, 'POST')

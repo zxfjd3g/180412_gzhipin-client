@@ -32,6 +32,7 @@ class Personal extends React.Component {
   }
   render() {
     const {username, header, post, info, salary, company} = this.props.user
+
     return (
       <div style={{marginTop: 50}}>
         <Result

@@ -128,7 +128,7 @@
 ## 1. NavFooter组件
     1). 过滤navList
     2). 包装一般组件使其可以访问路由相关属性: withRouter()
-    3). 通过js实现路由跳转: history.replace()
+    3). 通过js实现路由跳转(编程式导航: js路径跳转): history.replace()
     
 ## 2. Personal组件
     1). 读取user信息显示
@@ -162,5 +162,14 @@
              chat组件: 收集数据分发发消息的异步action
              actions: 连接socketio服务器/ 发送消息
          后台应用
-             models: 定义操作chats集合的model
+             models: 定义操作chats集合的ChatModel
              socketIO: 监视连接 / 监听浏览器发送的聊天消息 / 保存聊天信息 / 向所有连接的浏览器端发消息
+             
+# day05
+## 1. chat组件
+
+## 2. Message组件
+
+## 3. 项目打包发布运行
+             
+  
