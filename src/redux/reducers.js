@@ -10,7 +10,8 @@ import {
   RECEIVE_USER,
   RECEIVE_USER_LIST,
   RECEIVE_CHAT_MSGS,
-  RECEIVE_CHAT_MSG
+  RECEIVE_CHAT_MSG,
+  MSG_READ
 } from './action-types'
 
 const initUser = {
@@ -52,23 +53,37 @@ const initChat = {
   chatMsgs: [], // 当前用户相关的所有chatMsg的数组
   unReadCount: 0, // 总的未读数量
 }
-function chat(state=initChat, action) {
+function chat(state=initChat, action) { // reducer
 
   switch (action.type) {
     case RECEIVE_CHAT_MSGS:
-      const {users, chatMsgs} = action.data
+      var {users, chatMsgs, meId} = action.data
       return {
         users,
         chatMsgs,
-        unReadCount: 0,
+        unReadCount: chatMsgs.reduce((preTotal, msg) => preTotal + (!msg.read&&msg.to===meId ? 1 : 0), 0),
       }
     case RECEIVE_CHAT_MSG:
-      const chatMsg = action.data
+      var {chatMsg, meId} = action.data
 
       return {
         users: state.users,
         chatMsgs: [...state.chatMsgs, chatMsg],
-        unReadCount: 0,
+        unReadCount: state.unReadCount + (!chatMsg.read&&chatMsg.to===meId ? 1 : 0),
+      }
+    case MSG_READ:
+      var {count, targetId, meId} = action.data
+      return {
+        users: state.users,
+        // 将哪些msg的read从false变为true
+        chatMsgs: state.chatMsgs.map(msg => {
+          if(msg.from===targetId && msg.to===meId && !msg.read) {
+            return {...msg, read: true}
+          } else {
+            return msg
+          }
+        }),
+        unReadCount: state.unReadCount - count,
       }
     default:
       return state

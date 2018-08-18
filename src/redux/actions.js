@@ -23,7 +23,8 @@ import {
   RECEIVE_USER,
   RECEIVE_USER_LIST,
   RECEIVE_CHAT_MSGS,
-  RECEIVE_CHAT_MSG
+  RECEIVE_CHAT_MSG,
+  MSG_READ
 } from './action-types'   // 有几个type就会有几个同步action
 
 // 注册/登陆成功的同步action
@@ -38,9 +39,12 @@ export const resetUser = (msg) => ({type: RESET_USER, data: msg})
 const receiveUserList = (userList) => ({type: RECEIVE_USER_LIST, data: userList})
 
 // 接收消息列表的同步action
-const receiveChatMsgs = ({users, chatMsgs}) => ({type: RECEIVE_CHAT_MSGS, data: {users, chatMsgs}})
+const receiveChatMsgs = ({users, chatMsgs, meId}) => ({type: RECEIVE_CHAT_MSGS, data: {users, chatMsgs, meId}})
 // 接收一个消息的同步action
-const receiveChatMsg = (chatMsg) => ({type: RECEIVE_CHAT_MSG, data: chatMsg})
+const receiveChatMsg = (chatMsg, meId) => ({type: RECEIVE_CHAT_MSG, data: {chatMsg, meId}})
+
+// 查看了未读消息的同步action
+const msgRead = ({count, targetId, meId}) => ({type: MSG_READ, data: {count, targetId, meId}})
 
 /*
 注册的异步action
@@ -165,6 +169,8 @@ export function getUserList(type) {
  */
 function initSocketIO(dispatch, meId) {
 
+  // 将最新的meId保存起来
+  io.meId = meId
   /*
       单例对象: 只有一个实例(socket)
       1. 创建对象前: 判断对象不存在
@@ -179,13 +185,11 @@ function initSocketIO(dispatch, meId) {
       console.log('浏览器接收到服务发送的消息', chatMsg)
 
       // 只有当是我发的或者是发给我的消息, 分发一个接收chatMsg的同步action
-      if(chatMsg.from===meId || chatMsg.to===meId) {
-        dispatch(receiveChatMsg(chatMsg))
+      if(chatMsg.from===io.meId || chatMsg.to===io.meId) {// 与保存的最新meId进行比较
+        dispatch(receiveChatMsg(chatMsg, io.meId))
       }
     })
   }
-
-
 }
 
 /*
@@ -209,7 +213,21 @@ async function getChatMsgs(dispatch, meId) {
   const result = response.data
   if(result.code===0) {
     const {users, chatMsgs} = result.data
-    dispatch(receiveChatMsgs({users, chatMsgs}))
+    dispatch(receiveChatMsgs({users, chatMsgs, meId}))
+  }
+}
+
+/*
+更新未读消息为已读的异步action
+ */
+export function readMsg(targetId, meId) {
+  return async dispatch => {
+    const response = await reqReadMsg(targetId)
+    const result = response.data
+    if(result.code===0) {
+      const count = result.data
+      dispatch(msgRead({count, targetId, meId}))
+    }
   }
 }
 

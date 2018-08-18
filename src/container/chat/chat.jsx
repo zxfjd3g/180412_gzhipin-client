@@ -5,7 +5,7 @@
 import React, {Component} from 'react'
 import {NavBar, List, InputItem, Icon, Grid} from 'antd-mobile'
 import {connect} from 'react-redux'
-import {sendMsg} from '../../redux/actions'
+import {sendMsg, readMsg} from '../../redux/actions'
 
 const Item = List.Item
 
@@ -19,9 +19,12 @@ class Chat extends Component {
 
   // 在第一次render()之前调用
   componentWillMount () {
-    const emojisStr = '❤❤❤❤❤😊😊😊😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊😀😁😂😄😆😊'
+    const emojis = ['😀', '😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣','😀'
+      ,'😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣'
+      ,'😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣'
+      ,'😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣']
     this.emojis = []
-    emojisStr.split('').forEach(emoji => {
+    emojis.forEach(emoji => {
       this.emojis.push({
         text: emoji
       })
@@ -49,6 +52,16 @@ class Chat extends Component {
   componentDidMount() {
     // 初始显示列表
     window.scrollTo(0, document.body.scrollHeight)
+  }
+
+  // 在退出当前组件界面前
+  componentWillUnmount() {
+    // 更新未读消息为已读
+    // 当前用户id: from
+    const meId = this.props.user._id
+    // 目标用户的id: to
+    const targetId = this.props.match.params.userid
+    this.props.readMsg(targetId, meId)
   }
 
   // 更新显示时滚动到底部
@@ -88,13 +101,14 @@ class Chat extends Component {
     return (
       <div id='chat-page'>
         <NavBar
+          className='fix-top'
           icon={<Icon type='left'/>}
           onLeftClick={() => this.props.history.goBack()}
         >
           {users[targetId].username}
         </NavBar>
 
-        <List style={{marginBottom: 50}}>
+        <List style={{marginBottom: 50, marginTop: 50}}>
           {
             msgs.map((msg, index) => {
               if(msg.to===meId) { // 别人发给我的
@@ -158,5 +172,5 @@ class Chat extends Component {
 
 export default connect(
   state => ({user: state.user, chat: state.chat}),
-  {sendMsg}
+  {sendMsg, readMsg}
 )(Chat)

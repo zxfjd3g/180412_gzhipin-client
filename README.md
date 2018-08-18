@@ -167,9 +167,43 @@
              
 # day05
 ## 1. chat组件
+    1). 后台
+        models
+          添加操作chats集合的ChatModel
+        routes
+          获取当前用户的聊天消息列表: /msglist
+          修改指定消息为已读: /readmsg
+        socketio
+          接收浏览器客户发送的消息数据, 保存完成后, 发送给所有连接的浏览器
+    2). 前台
+        api
+          reqChatMsgList()
+          reqReadChatMsg(from)
+        redux
+          异步获取消息列表
+          绑定接收新的聊天消息的监听
+          发送聊天消息给服务器
+          管理chat数据的reducer
+        组件
+          读取user/chat状态数据显示
+          发送聊天消息
+          对chatMsg进行过滤
+          实现自动滑动到底部显示
+          表情包功能
 
 ## 2. Message组件
-
+    对消息进行分组保存, 且只保存每个组最后一条消息
+    对于对象容器和数组容器的选择
+    数组排序
+    
+## 3. 未读消息
+    每个组的未读数量统计
+    总未读数量统计显示
+    查看消息后, 更新未读数量
+    
 ## 3. 项目打包发布运行
-             
+    npm run build --> 生成本地打包文件(build)
+    build中所有文件复制到server端的public下
+    npm start运行服务器应用
+    就可以访问了     
   
